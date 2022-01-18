@@ -10,3 +10,12 @@
 # Linear Regression with Multiple Variables
 
 Feature scaling is necessary otherwise the model wasn't fitting to the data.
+
+
+## training data
+![alt](./lr_multiple_variable_data.png)
+## Predictions before training
+![alt](./lr_multiple_variable_before_training.png)
+## Predictions after training
+![alt](./lr_multiple_variable_prediction.png)
+![alt](./lr_multiple_variable_prediction_2.png)
