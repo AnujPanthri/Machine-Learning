@@ -1,6 +1,6 @@
 # Linear Regression with One Variable
 
-[alt]<./lr_one_variable_data.png>
+![alt]<./lr_one_variable_data.png>
 
 
 # Linear Regression with Multiple Variables
