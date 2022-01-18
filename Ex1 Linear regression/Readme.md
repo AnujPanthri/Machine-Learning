@@ -1,6 +1,8 @@
 # Linear Regression with One Variable
-
+training data
 ![alt](./lr_one_variable_data.png)
+![alt](./lr_one_variable_training_logs.png)
+![alt](./lr_one_variable_fitted_line.png)
 
 
 # Linear Regression with Multiple Variables
