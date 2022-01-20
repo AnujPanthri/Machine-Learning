@@ -9,3 +9,16 @@
 ![alt](./pr_training.png)
 ## Predictions after training
 ![alt](./pr_after_training.png)
+
+
+
+
+# Polynomial Regression with Multiple Variables
+
+
+## training data
+![alt](./pr_multiple_variables_data.png)
+## Training logs
+![alt](./pr_multiple_variables_logs.png)
+## Predictions after training
+![alt](./pr_multiple_variables_after_training.png)
