@@ -13,7 +13,7 @@ X,y=load_data("ex1data2.txt")
 print(X.shape)
 print(y.shape)
 class linear_regression:
-    def __init__(self,X,y,alpha=0.01):
+    def __init__(self,X,y,alpha=0.01,reg=0):
         self.original_X=np.concatenate([np.ones([X.shape[0],1]),X],axis=1)
         self.mu=np.average(X,axis=0)
         self.sigma=np.std(X,axis=0,ddof=1)
@@ -31,6 +31,7 @@ class linear_regression:
         self.alpha=alpha
         self.theta=np.expand_dims([0.5,1,0.8],axis=1)
         self.cost_hist=[]
+        self.reg=reg
         # print("theta:",self.theta.shape)
     def feature_scaling(self,test_x):
         # print(mu.shape)
@@ -59,12 +60,15 @@ class linear_regression:
         return out
     def cost(self):
         m=self.X.shape[0]
-        cost=(1/(2*m))*np.sum((self.out(self.X)-self.y)**2)
+        # cost=(1/(2*m))*(np.sum((self.out(self.X)-self.y)**2))
+        cost=(1/(2*m))*(np.sum((self.out(self.X)-self.y)**2)+(self.reg*np.sum(self.theta[1:,0]**2)) )
         return cost
     def gradient_decent(self):
         m=self.X.shape[0]
-        gradients=np.matmul(self.X.T,(self.out(self.X)-self.y))
-        self.theta-=(self.alpha/m)*(gradients)
+        gradients=(1/m)*np.matmul(self.X.T,(self.out(self.X)-self.y))
+        # self.theta-=self.alpha*gradients
+        self.theta[0:1,:]-=self.alpha*gradients[0:1,:]
+        self.theta[1:,:]-=self.alpha*(gradients[1:,:]+((self.reg/m)*self.theta[1:,:]))
     def fit(self,iter=100):
         for i in range(iter):
             self.gradient_decent()
@@ -83,9 +87,9 @@ class linear_regression:
         scaled_mesh=self.feature_scaling(np.concatenate([np.expand_dims(x_surf.ravel(),axis=-1),np.expand_dims(y_surf.ravel(),axis=-1)] , axis=1))
         fittedY=self.out(np.concatenate( [np.ones([reduce(lambda a,b: a*b,x_surf.shape),1]),scaled_mesh] , axis=1))
         fittedY=fittedY.reshape(x_surf.shape)
-        print('x_surf:',x_surf.shape)
-        print("y_surf:",y_surf.shape)
-        print("fittedY:",fittedY.shape)
+        # print('x_surf:',x_surf.shape)
+        # print("y_surf:",y_surf.shape)
+        # print("fittedY:",fittedY.shape)
 
         fig = plt.figure(figsize = (10, 7))
         ax = plt.axes(projection ="3d")
@@ -106,6 +110,7 @@ class linear_regression:
 
 
 lr=linear_regression(X,y)
+# lr=linear_regression(X,y,reg=100)
 lr.show()
 lr.plot_lr()
 lr.fit(1000)
