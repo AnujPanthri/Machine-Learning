@@ -12,11 +12,11 @@ def load_data(str1):
 X=np.arange(1,20+1,1).reshape(-1,1)
 y=X**2
 
-# print(X.shape)
-# print(y.shape)
+print(X.shape)
+print(y.shape)
 
 class polynomial_regression:
-    def __init__(self,X,y,alpha=0.01,order=3):
+    def __init__(self,X,y,alpha=0.01,order=3,reg=0):
         self.order=order
         self.X=X
         X=self.polynomial(X)
@@ -38,6 +38,7 @@ class polynomial_regression:
         self.theta=np.expand_dims(np.random.rand(order+1),axis=1)
         self.cost_hist=[]
         # print("theta:",self.theta.shape)
+        self.reg=reg
 
     def feature_scaling(self,test_x):
         # print(mu.shape)
@@ -69,12 +70,15 @@ class polynomial_regression:
         return out
     def cost(self):
         m=self.X.shape[0]
-        cost=(1/(2*m))*np.sum((self.out(self.scaled_x)-self.y)**2)
+        # cost=(1/(2*m))*(np.sum((self.out(self.scaled_x)-self.y)**2))
+        cost=(1/(2*m))*(np.sum((self.out(self.scaled_x)-self.y)**2)+(self.reg*np.sum(self.theta[1:,0]**2)) )
         return cost
     def gradient_decent(self):
         m=self.X.shape[0]
-        gradients=np.matmul(self.scaled_x.T,(self.out(self.scaled_x)-self.y))
-        self.theta-=(self.alpha/m)*(gradients)
+        gradients=(1/m)*np.matmul(self.scaled_x.T,(self.out(self.scaled_x)-self.y))
+        # self.theta-=self.alpha*gradients
+        self.theta[0:1,:]-=self.alpha*gradients[0:1,:]
+        self.theta[1:,:]-=self.alpha*(gradients[1:,:]+((self.reg/m)*self.theta[1:,:]))
     def fit(self,iter=100):
         for i in range(iter):
             self.gradient_decent()
@@ -111,10 +115,11 @@ class polynomial_regression:
 
 
 
-pr=polynomial_regression(X,y,order=3)
+pr=polynomial_regression(X,y,order=40,alpha=0.1)
+# pr=polynomial_regression(X,y,order=40,alpha=0.1,reg=5)
 pr.show()
 pr.plot_pr()
-pr.fit(1000)
+pr.fit(400)
 pr.plot_training()
 pr.plot_pr()
 
