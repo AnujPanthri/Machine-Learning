@@ -163,16 +163,23 @@ class one_for_all_logistic_regression:
         out=np.argmax(out,axis=-1).reshape(-1,1)
         # print("out:",out.shape)
         return out
-    def acc(self):
-        y_true=self.y
-        y_pred=self.get_results(self.all_models[0].ready_data(self.X))
+    def acc(self,test_x=0,test_y=0,show=True):
+        if isinstance(test_x,np.ndarray):
+            y_true=test_y
+            y_pred=self.get_results(self.all_models[0].ready_data(test_x))
+        else:
+            y_true=self.y
+            y_pred=self.get_results(self.all_models[0].ready_data(self.X))
+
         total=np.sum(np.ones_like(y_true))
         match=np.sum((y_true==y_pred)*1)
         acc=(match/total)*100
-        for i in self.classes:
-            print((i+1)," model:",sep='',end='')
-            self.all_models[i].acc()
-        print("whole model's acc:","{:.2f}".format(acc))
+        if show:
+            for i in self.classes:
+                print((i+1)," model:",sep='',end='')
+                self.all_models[i].acc()
+            print("whole model's acc:","{:.2f}".format(acc))
+        return acc
     def decision_boundary(self):
 
         x_min, x_max = self.X[:, 0].min() - 0.5, self.X[:, 0].max() + 0.5
@@ -190,7 +197,7 @@ class one_for_all_logistic_regression:
         # normal_data=self.scaled_to_normal(np.c_[xx.ravel(), yy.ravel()])
         # xx,yy=normal_data[:,0].reshape(zz.shape),normal_data[:,1].reshape(zz.shape)
         plt.figure(figsize=(10,7))
-        plt.title("Prediction(decision boundary)")
+        plt.title(f"Prediction(decision boundary) acc:{self.acc(show=False)}")
         colors=['go','bo','ro','co','mo','yo','ko','wo']
         for i in self.classes:
             plt.plot(self.X[(self.y==i)[:,0],0],self.X[(self.y==i)[:,0],1],colors[i])

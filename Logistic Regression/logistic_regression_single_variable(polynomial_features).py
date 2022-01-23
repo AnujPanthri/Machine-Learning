@@ -94,14 +94,20 @@ class logistic_regression:
         plt.xlabel('epochs')
         plt.ylabel('cost')
         plt.show()
-    def acc(self):
-        y_true=self.y
-        y_pred=(self.out(self.X)>=0.5)*1
+    def acc(self,test_x=0,test_y=0,show=True):
+        if isinstance(test_x,np.ndarray):
+            y_true=test_y
+            y_pred=(self.out(self.ready_data(test_x))>=0.5)*1
+        else:
+            y_true=self.y
+            y_pred=(self.out(self.X)>=0.5)*1
         # print(np.unique(y_pred))
         total=np.sum(np.ones_like(y_true))
         match=np.sum((y_true==y_pred)*1)
         acc=(match/total)*100
-        print("acc:","{:.2f}".format(acc))
+        if show:
+            print("acc:","{:.2f}".format(acc))
+        return acc
     def plot_lr(self):
 
         x_min, x_max = self.original_x[:, 0].min() - 0.5, self.original_x[:, 0].max() + 0.5
@@ -117,7 +123,7 @@ class logistic_regression:
         zz=zz.reshape(xx.shape)
 
         plt.figure(figsize=(10,7))
-        plt.title("Prediction(decision boundary)")
+        plt.title(f"Prediction(decision boundary) acc:{self.acc(show=False)}")
         plt.plot(self.original_x[(self.y==0)[:,0],0],self.original_x[(self.y==0)[:,0],1],"go")
         plt.plot(self.original_x[(self.y==1)[:,0],0],self.original_x[(self.y==1)[:,0],1],"bo")
         plt.contourf(xx, yy, zz, cmap='Paired')
