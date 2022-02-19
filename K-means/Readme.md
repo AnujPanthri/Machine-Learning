@@ -1,3 +1,3 @@
 ![](./before_training.png)
-![](loss_graph.png)
+![](loss%20graph.png)
 ![](after_training.png)
